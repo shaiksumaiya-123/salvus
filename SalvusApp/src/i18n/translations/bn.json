@@ -1,0 +1,15 @@
+{
+  "welcome": "Salvus-এ আপনাকে স্বাগতম",
+  "consent_title": "অবস্থান এবং সম্মতি",
+  "consent_description": "নিরাপত্তা এবং SOS পরিষেবা প্রদানের জন্য আমাদের আপনার অবস্থান (foreground এবং background) দরকার।",
+  "enter_emergency_contact": "জরুরি যোগাযোগ নম্বর দিন",
+  "save_and_continue": "সংরক্ষণ করুন এবং চালিয়ে যান",
+  "home_title": "হোম",
+  "safety_score": "নিরাপত্তা স্কোর",
+  "panic": "প্যানিক",
+  "send_sos": "SOS পাঠান",
+  "sos_sent": "SOS পাঠানো হয়েছে",
+  "trip_planner": "ভ্রমণ পরিকল্পক",
+  "history": "SOS ইতিহাস",
+  "settings": "সেটিংস"
+}

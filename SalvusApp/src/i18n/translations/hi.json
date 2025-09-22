@@ -1,0 +1,15 @@
+{
+  "welcome": "साल्वस में आपका स्वागत है",
+  "consent_title": "स्थान और सहमति",
+  "consent_description": "सुरक्षा और SOS सेवाएँ प्रदान करने के लिए हमें आपके स्थान (foreground और background) की आवश्यकता है।",
+  "enter_emergency_contact": "आपातकालीन संपर्क नंबर डालें",
+  "save_and_continue": "सहेजें और जारी रखें",
+  "home_title": "होम",
+  "safety_score": "सुरक्षा स्कोर",
+  "panic": "पैनिक",
+  "send_sos": "SOS भेजें",
+  "sos_sent": "SOS भेजा गया",
+  "trip_planner": "यात्रा योजनाकार",
+  "history": "SOS इतिहास",
+  "settings": "सेटिंग्स"
+}

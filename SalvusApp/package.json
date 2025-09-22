@@ -1,0 +1,35 @@
+{
+  "name": "SalvusApp",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "react-native start",
+    "android": "npx react-native run-android",
+    "ios": "npx react-native run-ios",
+    "lint": "eslint . --ext .ts,.tsx",
+    "tsc": "tsc --noEmit"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "i18next": "^23.0.1",
+    "react": "18.2.0",
+    "react-i18next": "^13.0.0",
+    "react-native": "latest",
+    "react-native-encrypted-storage": "^5.0.1",
+    "react-native-gesture-handler": "^2.12.0",
+    "react-native-maps": "^1.5.2",
+    "@transistorsoft/react-native-background-geolocation": "^4.7.3",
+    "react-native-localize": "^3.2.2",
+    "react-native-permissions": "^3.9.0",
+    "react-native-reanimated": "^3.4.0",
+    "@react-navigation/native": "^6.1.7",
+    "@react-navigation/stack": "^6.6.2",
+    "socket.io-client": "^4.7.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.14",
+    "@types/react-native": "^0.71.16",
+    "typescript": "^5.2.2"
+  }
+}
+

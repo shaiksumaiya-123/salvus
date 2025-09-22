@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tourist Heat Map - SALVUS Northeast India</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="header-logo">
+                        <svg width="60" height="40" viewBox="0 0 60 40">
+                            <text x="30" y="25" font-family="Arial" font-size="16" font-weight="900" 
+                                  text-anchor="middle" fill="url(#headerGradient)">SALVUS</text>
+                            <defs>
+                                <linearGradient id="headerGradient">
+                                    <stop offset="0%" stop-color="#FF6B35"/>
+                                    <stop offset="100%" stop-color="#4CAF50"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="header-text">
+                        <div class="header-title">Northeast India Tourism</div>
+                        <div class="header-subtitle">Government Portal</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="container">
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="destinations.html" class="nav-link">
+                    <i class="fas fa-mountain"></i> Destinations
+                </a>
+                <a href="hotels.html" class="nav-link">
+                    <i class="fas fa-bed"></i> Hotels
+                </a>
+                <a href="heatmap.html" class="nav-link active">
+                    <i class="fas fa-map"></i> Heat Map
+                </a>
+                <a href="safety.html" class="nav-link">
+                    <i class="fas fa-shield-alt"></i> Safety
+                </a>
+                <a href="iot.html" class="nav-link">
+                    <i class="fas fa-microchip"></i> IoT Devices
+                </a>
+                <a href="chatbot.html" class="nav-link">
+                    <i class="fas fa-comments"></i> AI Assistant
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header heatmap-header">
+        <div class="container">
+            <h1><i class="fas fa-map"></i> Interactive Tourist Heat Map</h1>
+            <p>Real-time tourist density and activity patterns across Northeast India</p>
+        </div>
+    </section>
+
+    <!-- Heat Map Section -->
+    <section class="heatmap-section">
+        <div class="container">
+            <div class="heatmap-controls">
+                <div class="control-group">
+                    <label>View Mode:</label>
+                    <select id="viewMode">
+                        <option value="density">Tourist Density</option>
+                        <option value="activity">Activity Hotspots</option>
+                        <option value="safety">Safety Zones</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Time Period:</label>
+                    <select id="timePeriod">
+                        <option value="live">Live Data</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                    </select>
+                </div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color high"></div>
+                        <span>High Density (100+ tourists)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color medium"></div>
+                        <span>Medium Density (50-100 tourists)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color low"></div>
+                        <span>Low Density (1-50 tourists)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="map-container">
+                <div id="heatMap" style="height: 600px; width: 100%;"></div>
+            </div>
+
+            <div class="heatmap-stats">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number">2,847</div>
+                            <div class="stat-label">Active Tourists</div>
+                            <div class="stat-change">+12% from yesterday</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number">24</div>
+                            <div class="stat-label">Active Hotspots</div>
+                            <div class="stat-change">Peak activity detected</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number">94%</div>
+                            <div class="stat-label">Safety Score</div>
+                            <div class="stat-change">All zones secure</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number">Real-time</div>
+                            <div class="stat-label">Data Updates</div>
+                            <div class="stat-change">Last updated: now</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Destinations Today -->
+    <section class="popular-destinations">
+        <div class="container">
+            <h2>Most Visited Destinations Today</h2>
+            <div class="destinations-list">
+                <div class="destination-item">
+                    <div class="destination-rank">1</div>
+                    <div class="destination-info">
+                        <h3>Shillong, Meghalaya</h3>
+                        <p>342 tourists currently visiting</p>
+                    </div>
+                    <div class="destination-trend up">
+                        <i class="fas fa-arrow-up"></i> +15%
+                    </div>
+                </div>
+                
+                <div class="destination-item">
+                    <div class="destination-rank">2</div>
+                    <div class="destination-info">
+                        <h3>Kaziranga National Park, Assam</h3>
+                        <p>298 tourists currently visiting</p>
+                    </div>
+                    <div class="destination-trend up">
+                        <i class="fas fa-arrow-up"></i> +8%
+                    </div>
+                </div>
+                
+                <div class="destination-item">
+                    <div class="destination-rank">3</div>
+                    <div class="destination-info">
+                        <h3>Gangtok, Sikkim</h3>
+                        <p>203 tourists currently visiting</p>
+                    </div>
+                    <div class="destination-trend stable">
+                        <i class="fas fa-minus"></i> 0%
+                    </div>
+                </div>
+                
+                <div class="destination-item">
+                    <div class="destination-rank">4</div>
+                    <div class="destination-info">
+                        <h3>Tawang, Arunachal Pradesh</h3>
+                        <p>156 tourists currently visiting</p>
+                    </div>
+                    <div class="destination-trend up">
+                        <i class="fas fa-arrow-up"></i> +22%
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating SOS Button -->
+    <button class="sos-button" onclick="activateSOS()">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>SOS</span>
+    </button>
+
+    <script src="script.js"></script>
+    <script>
+        // Initialize the heat map
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeHeatMap();
+        });
+
+        function initializeHeatMap() {
+            // Initialize Leaflet map
+            const map = L.map('heatMap').setView([26.2006, 92.9376], 6);
+            
+            // Add tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Tourist hotspot data with density
+            const hotspots = [
+                // High density areas (red)
+                { lat: 25.5788, lng: 91.8933, intensity: 0.9, name: 'Shillong', tourists: 342 },
+                { lat: 26.5748, lng: 92.4200, intensity: 0.8, name: 'Kaziranga', tourists: 298 },
+                { lat: 27.3389, lng: 88.6065, intensity: 0.7, name: 'Gangtok', tourists: 203 },
+                
+                // Medium density areas (orange)
+                { lat: 27.5056, lng: 91.3797, intensity: 0.6, name: 'Tawang', tourists: 156 },
+                { lat: 24.6637, lng: 93.9063, intensity: 0.5, name: 'Imphal', tourists: 134 },
+                { lat: 25.6751, lng: 94.1086, intensity: 0.5, name: 'Kohima', tourists: 112 },
+                
+                // Lower density areas (yellow/green)
+                { lat: 23.7271, lng: 92.7176, intensity: 0.4, name: 'Aizawl', tourists: 89 },
+                { lat: 23.8315, lng: 91.2868, intensity: 0.3, name: 'Agartala', tourists: 67 },
+                { lat: 26.1445, lng: 91.7362, intensity: 0.7, name: 'Guwahati', tourists: 245 },
+                { lat: 27.1004, lng: 88.2627, intensity: 0.4, name: 'Darjeeling', tourists: 178 }
+            ];
+
+            // Add heat points to map
+            hotspots.forEach(spot => {
+                const color = getHeatColor(spot.intensity);
+                const radius = 20 + (spot.intensity * 30);
+                
+                // Create circle marker
+                const circle = L.circle([spot.lat, spot.lng], {
+                    color: color,
+                    fillColor: color,
+                    fillOpacity: 0.3 + (spot.intensity * 0.4),
+                    radius: radius * 1000,
+                    weight: 2
+                }).addTo(map);
+                
+                // Add popup with information
+                circle.bindPopup(`
+                    <div class="heat-popup">
+                        <h3>${spot.name}</h3>
+                        <p><strong>${spot.tourists}</strong> tourists currently</p>
+                        <p>Activity Level: ${getActivityLevel(spot.intensity)}</p>
+                        <div class="heat-bar">
+                            <div class="heat-fill" style="width: ${spot.intensity * 100}%; background: ${color}"></div>
+                        </div>
+                    </div>
+                `);
+                
+                // Add marker for the location
+                const marker = L.marker([spot.lat, spot.lng]).addTo (map);
+                marker.bindTooltip(spot.name, { permanent: false, direction: 'top' });
+            });
+
+            // Add real-time updates
+            setInterval(() => {
+                updateHeatMapData(map, hotspots);
+            }, 30000); // Update every 30 seconds
+        }
+
+        function getHeatColor(intensity) {
+            if (intensity > 0.7) return '#ff0000'; // High density - red
+            if (intensity > 0.5) return '#ff8800'; // Medium density - orange
+            if (intensity > 0.3) return '#ffff00'; // Low-medium density - yellow
+            return '#00ff00'; // Low density - green
+        }
+
+        function getActivityLevel(intensity) {
+            if (intensity > 0.7) return 'Very High';
+            if (intensity > 0.5) return 'High';
+            if (intensity > 0.3) return 'Medium';
+            return 'Low';
+        }
+
+        function updateHeatMapData(map, hotspots) {
+            // Simulate real-time data updates
+            hotspots.forEach(spot => {
+                // Random small changes to tourist numbers
+                const change = Math.floor((Math.random() - 0.5) * 20);
+                spot.tourists = Math.max(0, spot.tourists + change);
+                
+                // Update intensity based on new numbers
+                spot.intensity = Math.min(1, spot.tourists / 400);
+            });
+
+            // Update the stats display
+            updateStatsDisplay();
+        }
+
+        function updateStatsDisplay() {
+            // Update the active tourists number with animation
+            const activeElement = document.querySelector('.stat-number');
+            if (activeElement) {
+                const currentNumber = parseInt(activeElement.textContent.replace(',', ''));
+                const change = Math.floor((Math.random() - 0.5) * 50);
+                const newNumber = Math.max(0, currentNumber + change);
+                activeElement.textContent = newNumber.toLocaleString();
+            }
+        }
+
+        // View mode change handler
+        document.getElementById('viewMode')?.addEventListener('change', function() {
+            // Implement different view modes
+            console.log('View mode changed to:', this.value);
+        });
+
+        // Time period change handler
+        document.getElementById('timePeriod')?.addEventListener('change', function() {
+            // Implement different time periods
+            console.log('Time period changed to:', this.value);
+        });
+    </script>
+</body>
+</html>

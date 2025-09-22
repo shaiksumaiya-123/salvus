@@ -1,0 +1,17 @@
+{
+  "welcome": "Salvus-লৈ আপোনালোকক স্বাগতম",
+  "consent_title": "অৱস্থান আৰু সম্মতি",
+  "consent_description": "আপোনাৰ সুৰক্ষা আৰু SOS সেৱাসমূহৰ বাবে আমি আপোনাৰ অৱস্থান (foreground & background) প্ৰয়োজন।",
+  "enter_emergency_contact": "আপৎকালীন যোগাযোগ নম্বৰ দাখিল কৰক",
+  "save_and_continue": "সংৰক্ষণ আৰু অব্যাহত ৰাখক",
+  "home_title": "হোম",
+  "safety_score": "সুৰক্ষা স্ক'ৰ",
+  "panic": "পেনিক",
+  "send_sos": "SOS পঠিওৱা",
+  "sos_sent": "SOS পঠিওৱা হৈ গ'ল",
+  "trip_planner": "ভ্রমণ পৰিকল্পক",
+  "history": "SOS ইতিহাস",
+  "settings": "ছেটিংচ"
+}
+
+

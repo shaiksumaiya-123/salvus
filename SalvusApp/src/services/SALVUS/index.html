@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SALVUS - Government of Northeast India Tourism & Safety Portal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loader-container">
+            <div class="salvus-logo-loader">
+                <svg width="120" height="120" viewBox="0 0 120 120">
+                    <circle cx="60" cy="60" r="50" stroke="url(#gradient1)" stroke-width="4" fill="none" stroke-dasharray="314" stroke-dashoffset="314" class="loading-circle">
+                        <animate attributeName="stroke-dashoffset" values="314;0" dur="2s" repeatCount="indefinite"/>
+                    </circle>
+                    <defs>
+                        <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#FF6B35;stop-opacity:1" />
+                            <stop offset="50%" style="stop-color:#F7931E;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#4CAF50;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <div class="logo-text-loader">SALVUS</div>
+            </div>
+            <div class="loading-text">Initializing Tourism Portal...</div>
+        </div>
+    </div>
+
+    <!-- Welcome Screen -->
+    <div class="welcome-screen" id="welcomeScreen">
+        <div class="welcome-container">
+            <div class="india-flag">
+                <div class="flag-stripe saffron"></div>
+                <div class="flag-stripe white">
+                    <div class="ashoka-chakra">
+                        <svg width="40" height="40" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" stroke="#000080" stroke-width="2" fill="none"/>
+                            <g stroke="#000080" stroke-width="1">
+                                <line x1="50" y1="5" x2="50" y2="95"/>
+                                <line x1="5" y1="50" x2="95" y2="50"/>
+                                <line x1="18" y1="18" x2="82" y2="82"/>
+                                <line x1="82" y1="18" x2="18" y2="82"/>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+                <div class="flag-stripe green"></div>
+            </div>
+            
+            <div class="welcome-content">
+                <div class="namaste-greeting">
+                    <h1>🙏 Namaste to Incredible India</h1>
+                    <p>Welcome to the enchanting Northeast Region</p>
+                </div>
+                
+                <div class="salvus-main-logo">
+                    <svg width="300" height="120" viewBox="0 0 300 120" class="logo-svg">
+                        <defs>
+                            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#FF6B35"/>
+                                <stop offset="25%" style="stop-color:#F7931E"/>
+                                <stop offset="50%" style="stop-color:#FFD700"/>
+                                <stop offset="75%" style="stop-color:#4CAF50"/>
+                                <stop offset="100%" style="stop-color:#2196F3"/>
+                            </linearGradient>
+                            <filter id="shadow">
+                                <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.3"/>
+                            </filter>
+                        </defs>
+                        <text x="150" y="70" font-family="Arial, sans-serif" font-size="48" font-weight="900" 
+                              text-anchor="middle" fill="url(#logoGradient)" filter="url(#shadow)">SALVUS</text>
+                        <path d="M50 90 Q150 80 250 90" stroke="url(#logoGradient)" stroke-width="3" fill="none"/>
+                    </svg>
+                    <div class="slogan">Safe Journeys, Beautiful Memories</div>
+                    <div class="govt-line">Government of Northeast India Tourism Department</div>
+                </div>
+                
+                <div class="welcome-features">
+                    <div class="feature-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Advanced Safety</h3>
+                        <p>AI-powered protection with IoT monitoring</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-language"></i>
+                        <h3>Multi-Language</h3>
+                        <p>Support for 15+ international languages</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <h3>Smart Tourism</h3>
+                        <p>Interactive maps and personalized guides</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-qrcode"></i>
+                        <h3>Digital ID</h3>
+                        <p>Blockchain-secured tourist identification</p>
+                    </div>
+                </div>
+                
+                <button class="btn-primary" onclick="showLanguageSelection()">
+                    <i class="fas fa-arrow-right"></i> Begin Your Northeast Journey
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Language Selection Screen -->
+    <div class="language-screen" id="languageScreen">
+        <div class="language-container">
+            <h1>Select Your Preferred Language</h1>
+            <p>Choose your language for the best tourism experience</p>
+            
+            <div class="languages-grid">
+                <div class="language-option" data-lang="en" onclick="selectLanguage('en')">
+                    <div class="lang-flag">🇺🇸</div>
+                    <div class="lang-name">English</div>
+                    <div class="lang-users">Global</div>
+                </div>
+                <div class="language-option" data-lang="hi" onclick="selectLanguage('hi')">
+                    <div class="lang-flag">🇮🇳</div>
+                    <div class="lang-name">हिन्दी</div>
+                    <div class="lang-users">India</div>
+                </div>
+                <div class="language-option" data-lang="as" onclick="selectLanguage('as')">
+                    <div class="lang-flag">🏔️</div>
+                    <div class="lang-name">অসমীয়া</div>
+                    <div class="lang-users">Assam</div>
+                </div>
+                <div class="language-option" data-lang="bn" onclick="selectLanguage('bn')">
+                    <div class="lang-flag">🇧🇩</div>
+                    <div class="lang-name">বাংলা</div>
+                    <div class="lang-users">Bengal</div>
+                </div>
+                <div class="language-option" data-lang="de" onclick="selectLanguage('de')">
+                    <div class="lang-flag">🇩🇪</div>
+                    <div class="lang-name">Deutsch</div>
+                    <div class="lang-users">Germany</div>
+                </div>
+                <div class="language-option" data-lang="fr" onclick="selectLanguage('fr')">
+                    <div class="lang-flag">🇫🇷</div>
+                    <div class="lang-name">Français</div>
+                    <div class="lang-users">France</div>
+                </div>
+                <div class="language-option" data-lang="es" onclick="selectLanguage('es')">
+                    <div class="lang-flag">🇪🇸</div>
+                    <div class="lang-name">Español</div>
+                    <div class="lang-users">Spain</div>
+                </div>
+                <div class="language-option" data-lang="ja" onclick="selectLanguage('ja')">
+                    <div class="lang-flag">🇯🇵</div>
+                    <div class="lang-name">日本語</div>
+                    <div class="lang-users">Japan</div>
+                </div>
+                <div class="language-option" data-lang="ko" onclick="selectLanguage('ko')">
+                    <div class="lang-flag">🇰🇷</div>
+                    <div class="lang-name">한국어</div>
+                    <div class="lang-users">Korea</div>
+                </div>
+                <div class="language-option" data-lang="zh" onclick="selectLanguage('zh')">
+                    <div class="lang-flag">🇨🇳</div>
+                    <div class="lang-name">中文</div>
+                    <div class="lang-users">China</div>
+                </div>
+                <div class="language-option" data-lang="ru" onclick="selectLanguage('ru')">
+                    <div class="lang-flag">🇷🇺</div>
+                    <div class="lang-name">Русский</div>
+                    <div class="lang-users">Russia</div>
+                </div>
+                <div class="language-option" data-lang="ar" onclick="selectLanguage('ar')">
+                    <div class="lang-flag">🕌</div>
+                    <div class="lang-name">العربية</div>
+                    <div class="lang-users">Arabic</div>
+                </div>
+            </div>
+            
+            <button class="btn-continue" id="continueBtn" onclick="showRegistration()" style="display:none;">
+                <i class="fas fa-check"></i> Continue to Registration
+            </button>
+        </div>
+    </div>
+
+    <!-- Registration Screen -->
+    <div class="registration-screen" id="registrationScreen">
+        <div class="registration-container">
+            <div class="registration-header">
+                <h1><i class="fas fa-user-plus"></i> Tourist Registration</h1>
+                <p>Complete your registration to receive your Digital Tourist ID and QR code</p>
+            </div>
+            
+            <form class="registration-form" id="registrationForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Full Name *</label>
+                        <input type="text" id="fullName" required placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email Address *</label>
+                        <input type="email" id="email" required placeholder="your.email@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-phone"></i> Phone Number *</label>
+                        <input type="tel" id="phone" required placeholder="+91 XXXXX XXXXX">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-flag"></i> Nationality *</label>
+                        <select id="nationality" required>
+                            <option value="">Select Nationality</option>
+                            <option value="indian">Indian</option>
+                            <option value="american">American</option>
+                            <option value="british">British</option>
+                            <option value="german">German</option>
+                            <option value="french">French</option>
+                            <option value="japanese">Japanese</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-id-card"></i> Document Type *</label>
+                        <select id="docType" required>
+                            <option value="">Select Document</option>
+                            <option value="passport">Passport</option>
+                            <option value="aadhaar">Aadhaar Card</option>
+                            <option value="driving">Driving License</option>
+                            <option value="voter">Voter ID</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-hashtag"></i> Document Number *</label>
+                        <input type="text" id="docNumber" required placeholder="Enter document number">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> Travel Start Date *</label>
+                        <input type="date" id="travelStart" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-check"></i> Travel End Date *</label>
+                        <input type="date" id="travelEnd" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-phone-alt"></i> Emergency Contact Number *</label>
+                    <input type="tel" id="emergencyContact" required placeholder="Emergency contact number">
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-map-marked"></i> States to Visit</label>
+                    <div class="states-checkbox">
+                        <label><input type="checkbox" value="assam"> Assam</label>
+                        <label><input type="checkbox" value="meghalaya"> Meghalaya</label>
+                        <label><input type="checkbox" value="arunachal"> Arunachal Pradesh</label>
+                        <label><input type="checkbox" value="manipur"> Manipur</label>
+                        <label><input type="checkbox" value="mizoram"> Mizoram</label>
+                        <label><input type="checkbox" value="nagaland"> Nagaland</label>
+                        <label><input type="checkbox" value="tripura"> Tripura</label>
+                        <label><input type="checkbox" value="sikkim"> Sikkim</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" required>
+                        <i class="fas fa-check-square"></i>
+                        I agree to the Terms & Conditions and authorize location tracking for safety purposes
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn-register">
+                    <i class="fas fa-qrcode"></i> Generate Digital Tourist ID
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Website -->
+    <div id="mainWebsite" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo-section">
+                        <div class="header-logo">
+                            <svg width="60" height="40" viewBox="0 0 60 40">
+                                <text x="30" y="25" font-family="Arial" font-size="16" font-weight="900" 
+                                      text-anchor="middle" fill="url(#headerGradient)">SALVUS</text>
+                                <defs>
+                                    <linearGradient id="headerGradient">
+                                        <stop offset="0%" stop-color="#FF6B35"/>
+                                        <stop offset="100%" stop-color="#4CAF50"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="header-text">
+                            <div class="header-title">Northeast India Tourism</div>
+                            <div class="header-subtitle">Government Portal</div>
+                        </div>
+                    </div>
+                    
+                    <div class="header-info">
+                        <div class="user-badge" id="userBadge">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Welcome, Tourist</span>
+                        </div>
+                        <div class="emergency-info">
+                            <i class="fas fa-phone-alt"></i>
+                            <span>Emergency: 112</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="navigation">
+            <div class="container">
+                <div class="nav-menu">
+                    <a href="index.html" class="nav-link active">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                    <a href="destinations.html" class="nav-link">
+                        <i class="fas fa-mountain"></i> Destinations
+                    </a>
+                    <a href="hotels.html" class="nav-link">
+                        <i class="fas fa-bed"></i> Hotels
+                    </a>
+                    <a href="heatmap.html" class="nav-link">
+                        <i class="fas fa-map"></i> Heat Map
+                    </a>
+                    <a href="safety.html" class="nav-link">
+                        <i class="fas fa-shield-alt"></i> Safety
+                    </a>
+                    <a href="iot.html" class="nav-link">
+                        <i class="fas fa-microchip"></i> IoT Devices
+                    </a>
+                    <a href="chatbot.html" class="nav-link">
+                        <i class="fas fa-comments"></i> AI Assistant
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-background"></div>
+            <div class="hero-content">
+                <div class="container">
+                    <div class="hero-text">
+                        <h1>Discover Northeast India</h1>
+                        <p>Experience the pristine beauty, rich culture, and warm hospitality of India's seven sister states with complete safety and security</p>
+                        <div class="hero-buttons">
+                            <a href="destinations.html" class="btn-hero primary">
+                                <i class="fas fa-compass"></i> Explore Destinations
+                            </a>
+                            <a href="safety.html" class="btn-hero secondary">
+                                <i class="fas fa-shield-alt"></i> Safety Features
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tourist Dashboard -->
+        <section class="dashboard">
+            <div class="container">
+                <h2 class="section-title">Your Tourism Dashboard</h2>
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="card-icon green">
+                            <i class="fas fa-shield-check"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Safety Score</h3>
+                            <div class="metric">94%</div>
+                            <p>Current location safety rating</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon blue">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Active Tourists</h3>
+                            <div class="metric">2,847</div>
+                            <p>Currently exploring Northeast</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon orange">
+                            <i class="fas fa-thermometer-half"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Weather Status</h3>
+                            <div class="metric">Perfect</div>
+                            <p>Ideal conditions for sightseeing</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon purple">
+                            <i class="fas fa-route"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Recommended Routes</h3>
+                            <div class="metric">12</div>
+                            <p>Personalized travel suggestions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Links -->
+        <section class="quick-links">
+            <div class="container">
+                <h2 class="section-title">Quick Access</h2>
+                <div class="links-grid">
+                    <a href="destinations.html" class="quick-link-card">
+                        <div class="link-icon">
+                            <i class="fas fa-mountain"></i>
+                        </div>
+                        <h3>Explore Destinations</h3>
+                        <p>Discover 8 beautiful northeastern states</p>
+                    </a>
+                    
+                    <a href="hotels.html" class="quick-link-card">
+                        <div class="link-icon">
+                            <i class="fas fa-hotel"></i>
+                        </div>
+                        <h3>Find Hotels</h3>
+                        <p>Government-verified accommodations</p>
+                    </a>
+                    
+                    <a href="safety.html" class="quick-link-card">
+                        <div class="link-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Safety Center</h3>
+                        <p>Real-time protection and monitoring</p>
+                    </a>
+                    
+                    <a href="chatbot.html" class="quick-link-card">
+                        <div class="link-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3>AI Assistant</h3>
+                        <p>24/7 multilingual support</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Floating SOS Button -->
+    <button class="sos-button" onclick="activateSOS()">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>SOS</span>
+    </button>
+
+    <!-- SOS Modal -->
+    <div class="modal" id="sosModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-exclamation-triangle"></i> Emergency SOS Activated</h2>
+            </div>
+            <div class="modal-body">
+                <div class="emergency-status">
+                    <div class="status-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Emergency signal dispatched</span>
+                    </div>
+                    <div class="status-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Location shared with authorities</span>
+                    </div>
+                    <div class="status-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>Emergency contacts notified</span>
+                    </div>
+                </div>
+                <div class="response-time">
+                    <strong>Estimated Response Time: 8-12 minutes</strong>
+                </div>
+                <p>Stay calm and remain at your current location. Help is on the way.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-close" onclick="closeSOS()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+

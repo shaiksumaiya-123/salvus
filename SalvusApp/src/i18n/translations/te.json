@@ -1,0 +1,15 @@
+{
+  "welcome": "Salvus కి స్వాగతం",
+  "consent_title": "స్థానం & అనుమతి",
+  "consent_description": "బ్రహత్ & బ్యాక్‌గ్రౌండ్‌లో మీ స్థానం అవసరం కావున మేము ఈ సేవలు అందిస్తున్నాము.",
+  "enter_emergency_contact": "అత్యవసర సంప్రదింపు సంఖ్య నమోదు చేయండి",
+  "save_and_continue": "సేవ్ చేసి కొనసాగించు",
+  "home_title": "హోమ్",
+  "safety_score": "భద్రత స్కోర్",
+  "panic": "పానిక్",
+  "send_sos": "SOS పంపండి",
+  "sos_sent": "SOS పంపబడింది",
+  "trip_planner": "ట్రిప్ ప్లానర్",
+  "history": "SOS చరిత్ర",
+  "settings": "సెట్టింగ్స్"
+}

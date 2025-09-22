@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Tourist Safety Platform - System Architecture</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+            overflow-x: auto;
+            color: #334155;
+        }
+        
+        .mindmap-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 40px);
+            position: relative;
+        }
+        
+        .mindmap {
+            position: relative;
+            width: 1600px;
+            height: 1000px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .central-node {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1e293b;
+            color: white;
+            padding: 24px 32px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 18px;
+            z-index: 10;
+            width: 240px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .branch {
+            position: absolute;
+            padding: 16px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+        
+        .branch:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .sub-branch {
+            position: absolute;
+            padding: 10px 14px;
+            border-radius: 6px;
+            color: #475569;
+            font-weight: 500;
+            text-align: center;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sub-branch:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .access-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        /* Access Control Colors */
+        .restricted { 
+            background: #dc2626;
+            border-color: #dc2626;
+        }
+        .restricted .access-badge {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        .unrestricted { 
+            background: #059669;
+            border-color: #059669;
+        }
+        .unrestricted .access-badge {
+            background: #f0fdf4;
+            color: #059669;
+        }
+        
+        .general { 
+            background: #3b82f6;
+            border-color: #3b82f6;
+        }
+        .general .access-badge {
+            background: #eff6ff;
+            color: #3b82f6;
+        }
+        
+        .functional { 
+            background: #7c3aed;
+            border-color: #7c3aed;
+        }
+        .functional .access-badge {
+            background: #f5f3ff;
+            color: #7c3aed;
+        }
+        
+        /* Category specific colors */
+        .user-interface { background: #64748b; }
+        .backend-services { background: #0f766e; }
+        .security { background: #b91c1c; }
+        .ai-ml { background: #7c2d12; }
+        .data-storage { background: #4338ca; }
+        .external-apis { background: #a21caf; }
+        .iot-hardware { background: #ea580c; }
+        .monitoring { background: #1e40af; }
+        
+        /* Connecting lines */
+        .line {
+            position: absolute;
+            height: 1px;
+            background: #cbd5e1;
+            transform-origin: left center;
+            z-index: 1;
+        }
+        
+        .sub-line {
+            position: absolute;
+            height: 1px;
+            background: #e2e8f0;
+            transform-origin: left center;
+            z-index: 1;
+        }
+        
+        .title {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #1e293b;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+        
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .legend h4 {
+            margin: 0 0 12px 0;
+            color: #1e293b;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            color: #475569;
+            font-size: 12px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 12px;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        
+        .module-type {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="mindmap-container">
+        <div class="mindmap">
+            <div class="title">TourGuard - System Architecture & Access Control</div>
+            
+            <!-- Central Node -->
+            <div class="central-node">
+                Smart Tourist Safety Platform<br><small style="font-size: 12px; opacity: 0.8;">Core System</small>
+            </div>
+            
+            <!-- Main Branches -->
+            
+            <!-- User Interface Layer -->
+            <div class="branch user-interface general" style="top: 120px; left: 200px; width: 180px;">
+                User Interface Layer
+                <div class="access-badge">General</div>
+            </div>
+            <div class="line" style="top: 450px; left: 650px; width: 200px; transform: rotate(-50deg);"></div>
+            
+            <!-- Tourist Mobile App -->
+            <div class="sub-branch unrestricted" style="top: 60px; left: 50px; width: 140px;">
+                Tourist Mobile App
+                <div class="access-badge">Open</div>
+            </div>
+            <div class="sub-line" style="top: 140px; left: 190px; width: 80px; transform: rotate(-45deg);"></div>
+            
+            <!-- Police Web Portal -->
+            <div class="sub-branch restricted" style="top: 60px; left: 400px; width: 140px;">
+                Police Web Portal
+                <div class="access-badge">Auth</div>
+            </div>
+            <div class="sub-line" style="top: 140px; left: 380px; width: 80px; transform: rotate(45deg);"></div>
+            
+            <!-- Tourism Dashboard -->
+            <div class="sub-branch restricted" style="top: 180px; left: 30px; width: 140px;">
+                Tourism Dashboard
+                <div class="access-badge">Auth</div>
+            </div>
+            <div class="sub-line" style="top: 160px; left: 170px; width: 60px; transform: rotate(-75deg);"></div>
+            
+            <!-- Emergency Interface -->
+            <div class="sub-branch unrestricted" style="top: 180px; left: 420px; width: 140px;">
+                Emergency Interface
+                <div class="access-badge">Open</div>
+            </div>
+            <div class="sub-line" style="top: 160px; left: 380px; width: 80px; transform: rotate(75deg);"></div>
+            
+            <!-- Backend Services -->
+            <div class="branch backend-services functional" style="top: 150px; right: 120px; width: 180px;">
+                Backend Services
+                <div class="access-badge">System</div>
+            </div>
+            <div class="line" style="top: 450px; left: 800px; width: 200px; transform: rotate(-30deg);"></div>
+            
+            <!-- Authentication Service -->
+            <div class="sub-branch functional" style="top: 80px; right: 20px; width: 130px;">
+                Authentication Service
+                <div class="access-badge">Core</div>
+            </div>
+            <div class="sub-line" style="top: 150px; left: 1280px; width: 80px; transform: rotate(-25deg);"></div>
+            
+            <!-- User Management -->
+            <div class="sub-branch restricted" style="top: 120px; right: 280px; width: 130px;">
+                User Management
+                <div class="access-badge">Admin</div>
+            </div>
+            <div class="sub-line" style="top: 160px; left: 1200px; width: 60px; transform: rotate(15deg);"></div>
+            
+            <!-- Geo-spatial Service -->
+            <div class="sub-branch general" style="top: 200px; right: 20px; width: 130px;">
+                Geo-spatial Service
+                <div class="access-badge">Public</div>
+            </div>
+            <div class="sub-line" style="top: 190px; left: 1280px; width: 80px; transform: rotate(25deg);"></div>
+            
+            <!-- Incident Response -->
+            <div class="sub-branch restricted" style="top: 240px; right: 280px; width: 130px;">
+                Incident Response
+                <div class="access-badge">Auth</div>
+            </div>
+            <div class="sub-line" style="top: 200px; left: 1200px; width: 80px; transform: rotate(45deg);"></div>
+            
+            <!-- Security & Identity -->
+            <div class="branch security restricted" style="bottom: 150px; right: 120px; width: 180px;">
+                Security & Identity
+                <div class="access-badge">Secure</div>
+            </div>
+            <div class="line" style="top: 500px; left: 800px; width: 200px; transform: rotate(30deg);"></div>
+            
+            <!-- Blockchain Digital ID -->
+            <div class="sub-branch restricted" style="bottom: 80px; right: 20px; width: 130px;">
+                Blockchain Digital ID
+                <div class="access-badge">KYC</div>
+            </div>
+            <div class="sub-line" style="top: 720px; left: 1280px; width: 80px; transform: rotate(25deg);"></div>
+            
+            <!-- Encryption Service -->
+            <div class="sub-branch functional" style="bottom: 120px; right: 280px; width: 130px;">
+                Encryption Service
+                <div class="access-badge">Core</div>
+            </div>
+            <div class="sub-line" style="top: 700px; left: 1200px; width: 60px; transform: rotate(-15deg);"></div>
+            
+            <!-- Access Control -->
+            <div class="sub-branch restricted" style="bottom: 200px; right: 20px; width: 130px;">
+                Access Control
+                <div class="access-badge">Admin</div>
+            </div>
+            <div class="sub-line" style="top: 680px; left: 1280px; width: 80px; transform: rotate(-25deg);"></div>
+            
+            <!-- AI/ML Engine -->
+            <div class="branch ai-ml functional" style="bottom: 120px; left: 200px; width: 180px;">
+                AI/ML Engine
+                <div class="access-badge">System</div>
+            </div>
+            <div class="line" style="top: 500px; left: 650px; width: 200px; transform: rotate(50deg);"></div>
+            
+            <!-- Anomaly Detection -->
+            <div class="sub-branch functional" style="bottom: 60px; left: 50px; width: 140px;">
+                Anomaly Detection
+                <div class="access-badge">Auto</div>
+            </div>
+            <div class="sub-line" style="top: 780px; left: 190px; width: 80px; transform: rotate(45deg);"></div>
+            
+            <!-- Behavior Analysis -->
+            <div class="sub-branch functional" style="bottom: 60px; left: 400px; width: 140px;">
+                Behavior Analysis
+                <div class="access-badge">ML</div>
+            </div>
+            <div class="sub-line" style="top: 780px; left: 380px; width: 80px; transform: rotate(-45deg);"></div>
+            
+            <!-- Risk Assessment -->
+            <div class="sub-branch general" style="bottom: 180px; left: 30px; width: 140px;">
+                Risk Assessment
+                <div class="access-badge">Public</div>
+            </div>
+            <div class="sub-line" style="top: 740px; left: 170px; width: 60px; transform: rotate(75deg);"></div>
+            
+            <!-- Predictive Alerts -->
+            <div class="sub-branch restricted" style="bottom: 180px; left: 420px; width: 140px;">
+                Predictive Alerts
+                <div class="access-badge">Auth</div>
+            </div>
+            <div class="sub-line" style="top: 740px; left: 380px; width: 80px; transform: rotate(-75deg);"></div>
+            
+            <!-- Data Storage -->
+            <div class="branch data-storage functional" style="top: 400px; left: 30px; width: 160px;">
+                Data Storage
+                <div class="access-badge">System</div>
+            </div>
+            <div class="line" style="top: 470px; left: 600px; width: 150px; transform: rotate(180deg);"></div>
+            
+            <!-- Primary Database -->
+            <div class="sub-branch restricted" style="top: 350px; left: 80px; width: 120px;">
+                Primary Database
+                <div class="access-badge">Secure</div>
+            </div>
+            <div class="sub-line" style="top: 400px; left: 190px; width: 50px; transform: rotate(-90deg);"></div>
+            
+            <!-- Real-time Geo DB -->
+            <div class="sub-branch functional" style="top: 450px; left: 80px; width: 120px;">
+                Real-time Geo DB
+                <div class="access-badge">Live</div>
+            </div>
+            <div class="sub-line" style="top: 430px; left: 190px; width: 50px; transform: rotate(90deg);"></div>
+            
+            <!-- External APIs -->
+            <div class="branch external-apis general" style="bottom: 400px; left: 30px; width: 160px;">
+                External APIs
+                <div class="access-badge">Public</div>
+            </div>
+            <div class="line" style="top: 520px; left: 600px; width: 150px; transform: rotate(135deg);"></div>
+            
+            <!-- Google Maps API -->
+            <div class="sub-branch unrestricted" style="bottom: 350px; left: 80px; width: 120px;">
+                Google Maps API
+                <div class="access-badge">Open</div>
+            </div>
+            <div class="sub-line" style="top: 540px; left: 190px; width: 50px; transform: rotate(90deg);"></div>
+            
+            <!-- SMS/WhatsApp API -->
+            <div class="sub-branch general" style="bottom: 450px; left: 80px; width: 120px;">
+                SMS/WhatsApp API
+                <div class="access-badge">Config</div>
+            </div>
+            <div class="sub-line" style="top: 490px; left: 190px; width: 50px; transform: rotate(-90deg);"></div>
+            
+            <!-- IoT Hardware -->
+            <div class="branch iot-hardware unrestricted" style="top: 30px; right: 250px; width: 160px;">
+                IoT Hardware
+                <div class="access-badge">Device</div>
+            </div>
+            <div class="line" style="top: 430px; left: 800px; width: 120px; transform: rotate(-70deg);"></div>
+            
+            <!-- Smart Bands -->
+            <div class="sub-branch unrestricted" style="top: 80px; right: 200px; width: 120px;">
+                Smart Bands
+                <div class="access-badge">Wearable</div>
+            </div>
+            <div class="sub-line" style="top: 50px; left: 1160px; width: 60px; transform: rotate(60deg);"></div>
+            
+            <!-- Emergency Beacons -->
+            <div class="sub-branch general" style="top: 80px; right: 350px; width: 120px;">
+                Emergency Beacons
+                <div class="access-badge">SOS</div>
+            </div>
+            <div class="sub-line" style="top: 50px; left: 1040px; width: 80px; transform: rotate(-60deg);"></div>
+            
+            <!-- Monitoring & Analytics -->
+            <div class="branch monitoring restricted" style="bottom: 30px; right: 250px; width: 160px;">
+                Monitoring & Analytics
+                <div class="access-badge">Admin</div>
+            </div>
+            <div class="line" style="top: 520px; left: 800px; width: 120px; transform: rotate(70deg);"></div>
+            
+            <!-- Real-time Dashboard -->
+            <div class="sub-branch restricted" style="bottom: 80px; right: 200px; width: 120px;">
+                Real-time Dashboard
+                <div class="access-badge">Police</div>
+            </div>
+            <div class="sub-line" style="top: 850px; left: 1160px; width: 60px; transform: rotate(-60deg);"></div>
+            
+            <!-- Analytics Engine -->
+            <div class="sub-branch functional" style="bottom: 80px; right: 350px; width: 120px;">
+                Analytics Engine
+                <div class="access-badge">System</div>
+            </div>
+            <div class="sub-line" style="top: 850px; left: 1040px; width: 80px; transform: rotate(60deg);"></div>
+            
+        </div>
+        
+        <!-- Legend -->
+        <div class="legend">
+            <h4>Access Control Types</h4>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #dc2626;"></div>
+                Restricted - Authentication Required
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #059669;"></div>
+                Unrestricted - Public Access
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #3b82f6;"></div>
+                General - Configurable Access
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #7c3aed;"></div>
+                Functional - System Level
+            </div>
+        </div>
+        
+        <!-- Module Types -->
+        <div class="module-type">
+            <h4>Module Categories</h4>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #64748b;"></div>
+                User Interface
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #0f766e;"></div>
+                Backend Services
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #b91c1c;"></div>
+                Security & Identity
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #7c2d12;"></div>
+                AI/ML Engine
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #4338ca;"></div>
+                Data Storage
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #ea580c;"></div>
+                IoT Hardware
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SALVUS - Safe Journeys, Beautiful Memories | Northeast India Tourism & Safety</title>
+<style>
+  /* Basic resets and fonts */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+  body, html {
+    margin: 0; padding: 0; font-family: 'Inter', sans-serif; background: #f7f9fb; color: #2c3e50;
+  }
+  header {
+    background: #165a71;
+    color: #f1f6f9;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .logo {
+    font-weight: 700;
+    font-size: 1.8rem;
+    display: flex; align-items: center; gap: 0.6rem;
+    user-select: none;
+  }
+  .logo svg {
+    width: 40px; height: 40px;
+    stroke: #f9c74f;
+    fill: none;
+    stroke-width: 3;
+  }
+  nav {
+    margin-top: 0.5rem;
+  }
+  nav select {
+    padding: 0.4rem 0.7rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: none;
+    min-width: 150px;
+  }
+  main {
+    max-width: 1200px;
+    margin: 1rem auto;
+    padding: 0 1rem;
+  }
+  section {
+    margin-bottom: 2rem;
+    background: white;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+  }
+  .welcome {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 2rem;
+    color: #165a71;
+  }
+  .register-form {
+    max-width: 400px;
+    margin: 1rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .register-form input, .register-form button {
+    padding: 0.7rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  .register-form button {
+    background: #f9c74f;
+    border: none;
+    font-weight: 700;
+    color: #165a71;
+    cursor: pointer;
+  }
+  .qr-section {
+    text-align: center;
+    margin-top: 1rem;
+  }
+  .qr-code {
+    margin-top: 0.5rem;
+  }
+  /* SOS Button */
+  #sos-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #d62828;
+    color: white;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 1.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 0 15px #d62828;
+    z-index: 9999;
+  }
+  #sos-popup {
+    display: none;
+    background: rgba(0,0,0,0.8);
+    position: fixed;
+    top:0; left:0; right:0; bottom:0;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+  }
+  #sos-popup.active {
+    display: flex;
+  }
+  #sos-popup .popup-inner {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    width: 320px;
+    text-align: center;
+  }
+  #sos-popup .popup-inner h2 {
+    margin-bottom: 1rem;
+    color: #d62828;
+  }
+  #sos-popup .popup-inner button {
+    padding: 0.6rem 1rem;
+    font-weight: 700;
+    background: #d62828;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 1rem;
+  }
+  /* State info grid */
+  .states-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(260px,1fr));
+    gap: 1rem;
+  }
+  .state-card {
+    background: #f1f6f9;
+    padding: 1rem;
+    border-radius: 10px;
+  }
+  .state-card h3 {
+    margin-top: 0;
+    color: #165a71;
+  }
+  /* Hotels section */
+  .hotel-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  .hotel-list li {
+    background: #fafafa;
+    margin-bottom: 0.7rem;
+    padding: 0.8rem;
+    border-radius: 8px;
+    border-left: 5px solid #f9c74f;
+  }
+  /* Chatbot styles */
+  #chatbot-container {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 320px;
+    max-height: 420px;
+    background: white;
+    box-shadow: 0 0 15px rgb(0 0 0 / 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    z-index: 10000;
+    font-size: 14px;
+  }
+  #chat-header {
+    background: #165a71;
+    color: white;
+    padding: 0.6rem 1rem;
+  }
+  #chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem 1rem;
+    background: #eff4f6;
+  }
+  .chat-message {
+    margin-bottom: 0.6rem;
+  }
+  .chat-message.user {
+    text-align: right;
+    color: #2c3e50;
+  }
+  .chat-message.bot {
+    color: #165a71;
+    text-align: left;
+  }
+  #chat-input-form {
+    display: flex;
+    border-top: 1px solid #ccc;
+  }
+  #chat-input {
+    flex: 1;
+    padding: 0.6rem 1rem;
+    border: none;
+    font-size: 14px;
+  }
+  #chat-send-btn {
+    background: #f9c74f;
+    border: none;
+    color: #165a71;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0.6rem 1rem;
+  }
+  /* Heatmaps images */
+  .heatmaps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+  }
+  .heatmaps img {
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  /* IoT Devices info */
+  .iot-info {
+    background: #e6f2f7;
+    border-radius: 15px;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #134a63;
+  }
+  /* Responsive */
+  @media (max-width: 640px) {
+    header {
+      justify-content: center;
+    }
+    nav {
+      order: 3;
+      width: 100%;
+      margin-top: 1rem;
+      text-align: center;
+    }
+    main {
+      padding: 0 0.5rem;
+    }
+    .heatmaps {
+      flex-direction: column;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo" aria-label="SALVUS Logo">
+    <!-- Creative SVG logo -->
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <circle cx="32" cy="32" r="30" stroke="#f9c74f" stroke-width="3" fill="none"/>
+      <path d="M16 48 L32 16 L48 48 Z" stroke="#f9c74f" stroke-width="3" fill="none"/>
+      <path d="M32 16 L32 48" stroke="#f9c74f" stroke-width="3"/>
+    </svg>
+    SALVUS
+  </div>
+  <nav>
+    <label for="language-select" style="color: #f1f6f9;">Select Language: </label>
+    <select id="language-select" aria-label="Select Language">
+      <option value="en" selected>English 🇮🇳</option>
+      <option value="hi">हिन्दी 🇮🇳</option>
+      <option value="as">অসমীয়া 🇮🇳</option>
+      <option value="bn">বাংলা 🇮🇳</option>
+      <option value="de">Deutsch 🇩🇪</option>
+      <option value="fr">Français 🇫🇷</option>
+      <option value="es">Español 🇪🇸</option>
+      <option value="zh">中文 🇨🇳</option>
+      <option value="ja">日本語 🇯🇵</option>
+      <option value="ko">한국어 🇰🇷</option>
+      <option value="ru">Русский 🇷🇺</option>
+      <option value="pt">Português 🇵🇹</option>
+      <option value="it">Italiano 🇮🇹</option>
+      <option value="mr">मराठी 🇮🇳</option>
+      <option value="ta">தமிழ் 🇮🇳</option>
+      <option value="te">తెలుగు 🇮🇳</option>
+      <option value="kn">ಕನ್ನಡ 🇮🇳</option>
+      <option value="pa">ਪੰਜਾਬੀ 🇮🇳</option>
+      <option value="ne">नेपाली 🇳🇵</option>
+      <option value="th">ไทย 🇹🇭</option>
+      <option value="ar">العربية 🇸🇦</option>
+    </select>
+  </nav>
+</header>
+
+<main>
+
+  <!-- Welcome greeting -->
+  <section aria-label="Welcome Section">
+    <h1 class="welcome" id="welcome-text">Namaste! Welcome to Northeast India – Safe Journeys, Beautiful Memories</h1>
+  </section>
+
+  <!-- Registration -->
+  <section aria-labelledby="registration-title" id="register-section">
+    <h2 id="registration-title">Register to Get Your Tourist ID & QR Code</h2>
+    <form id="register-form" class="register-form" aria-describedby="register-instructions">
+      <p id="register-instructions">Please enter your details to generate your unique ID and QR code for a safe journey.</p>
+      <input type="text" id="fullname" name="fullname" placeholder="Full Name" required aria-required="true" minlength="3" />
+      <input type="email" id="email" name="email" placeholder="Email Address" required aria-required="true" />
+      <input type="tel" id="phone" name="phone" placeholder="Mobile Number (with country code)" required aria-required="true" pattern="^\+\d{7,15}$" />
+      <input type="text" id="passport" name="passport" placeholder="Passport or Aadhaar Number" required aria-required="true" minlength="6" />
+      <button type="submit" aria-label="Register and generate your QR code">Generate My ID & QR Code</button>
+    </form>
+    <div class="qr-section" aria-live="polite" aria-atomic="true" id="qr-section" style="display:none;">
+      <h3>Your Tourist ID and QR Code</h3>
+      <p><strong>ID:</strong> <span id="generated-id"></span></p>
+      <img id="qr-code" class="qr-code" alt="Your unique QR code"/>
+    </div>
+  </section>
+
+  <!-- Northeast States Info -->
+  <section aria-labelledby="states-title" id="states-info">
+    <h2 id="states-title">Explore Northeast States</h2>
+    <div class="states-grid" role="list">
+      <article class="state-card" role="listitem" tabindex="0">
+        <h3>Assam</h3>
+        <p>Dispur | Highlights: Kaziranga National Park, Majuli Island, Kamakhya Temple</p>
+      </article>
+      <article class="state-card" role="listitem" tabindex="0">
+        <h3>Arunachal Pradesh</h3>
+        <p>Itanagar | Highlights: Tawang Monastery, Bomdila, Ziro Valley</p>
+      </article>
+      <article class="state-card" role="listitem" tabindex="0">
+        <h3>Meghalaya</h3>
+        <p>Shillong | Highlights: Living Root Bridges, Cherrapunji, Mawsmai Cave</p>
+      </article>
+      <article class="state-card" role="listitem" tabindex="0">
+        <h3>Nagaland</h3>
+        <p>Kohima | Highlights: Hornbill Festival, Dzukou Valley, Kohima War Cemetery</p>
+      </article>
+      <article class="state-card" role="listitem" tabindex="0">
+        <h3>Mizoram</h3>
+        <p>Aizawl | Highlights: Reiek Tourist Resort, Champhai, Blue Mountain</p>
+      </article>
+      <article class="state-card" role="listitem" tabindex="0">
+        <h3>Manipur</h3>
+        <p>Imphal | Highlights: Loktak Lake, Kangla Fort, Keibul Lamjao National Park</p>
+      </article>
+      <article class="state-card" role="listitem" tabindex="0">
+        <h3>Tripura</h3>
+        <p>Agartala | Highlights: Ujjayanta Palace, Neermahal, Sepahijala Wildlife Sanctuary</p>
+      </article>
+      <article class="state-card" role="listitem" tabindex="0">
+        <h3>Sikkim</h3>
+        <p>Gangtok | Highlights: Tsomgo Lake, Nathula Pass, Yumthang Valley</p>
+      </article>
+      <article class="state-card" role="listitem" tabindex="0">
+        <h3>West Bengal (Darjeeling / Siliguri)</h3>
+        <p>Darjeeling & Siliguri | Highlights: Tiger Hill, Toy Train, Mahananda Wildlife Sanctuary</p>
+      </article>
+      <article class="state-card" role="listitem" tabindex="0">
+        <h3>North Bengal</h3>
+        <p>Silguri | Highlights: Tea gardens, Hill views, Local markets</p>
+      </article>
+      <article class="state-card" role="listitem" tabindex="0">
+        <h3>Bodoland</h3>
+        <p>Kokrajhar | Highlights: Manas National Park, Bodo Cultural Heritage</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Hotels -->
+  <section aria-labelledby="hotels-title" id="hotels-info">
+    <h2 id="hotels-title">Famous Hotels & Accommodations</h2>
+    <ul class="hotel-list" role="list">
+      <li tabindex="0"><strong>Heritage Homestay, Shillong</strong> – Verified Cultural Experience</li>
+      <li tabindex="0"><strong>Eco Resort, Kaziranga</strong> – Sustainable & Nature-friendly</li>
+      <li tabindex="0"><strong>Luxury Hotel, Gangtok</strong> – Premium Comfort & Views</li>
+      <li tabindex="0"><strong>Government Guest House, Itanagar</strong> – Affordable & Safe</li>
+    </ul>
+  </section>
+
+  <!-- Heatmaps -->
+  <section aria-labelledby="heatmaps-title">
+    <h2 id="heatmaps-title">Tourist Clusters & Safety Risk Heatmaps</h2>
+    <div class="heatmaps" aria-label="Tourist cluster and safety risk heatmaps">
+      <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/3217cf9058b3bec28f2d24e58de8abd3/d93f0d1a-f9d9-495d-becd-6a65c240505a/c7048e64.png" alt="Heatmap showing tourist cluster density in Northeast India"/>
+    </div>
+  </section>
+
+  <!-- IoT Devices info -->
+  <section aria-labelledby="iot-title">
+    <h2 id="iot-title">Internet of Things Devices for Tourist Safety</h2>
+    <div class="iot-info">
+      <p>Tourists can enhance their safety experience with optional IoT wearable devices such as wristbands and smart tags. These devices sync with the SALVUS app to provide:</p>
+      <ul>
+        <li>Real-time location tracking with geofencing alerts</li>
+        <li>One-touch SOS panic functions directly triggering emergency response</li>
+        <li>Health monitoring including fall detection and heart rate alerts</li>
+        <li>Discreet communication with family and authorities</li>
+      </ul>
+      <p>These devices maintain strict privacy controls and are available for rent or purchase at major tourist centers.</p>
+    </div>
+  </section>
+</main>
+
+<!-- SOS button -->
+<button id="sos-btn" aria-label="Emergency SOS Button" title="Press for Emergency Help">SOS</button>
+<div id="sos-popup" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="popup-inner">
+    <h2>Emergency SOS Activated</h2>
+    <p>Your location and tourist ID are being sent to emergency services.</p>
+    <button id="sos-cancel">Cancel</button>
+  </div>
+</div>
+
+<!-- Multilingual chatbot -->
+<div id="chatbot-container" aria-label="SALVUS Help Chatbot" role="complementary" aria-live="polite" aria-atomic="false" aria-expanded="true">
+  <div id="chat-header">Ask SALVUS - Multilingual Chatbot</div>
+  <div id="chat-messages" tabindex="0" role="log" aria-live="polite"></div>
+  <form id="chat-input-form" aria-label="Send a message to SALVUS chatbot">
+    <input id="chat-input" placeholder="Type your question or request translation..." autocomplete="off" aria-required="true" />
+    <button type="submit" id="chat-send-btn" aria-label="Send chat message">Send</button>
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+<script>
+  // Language Greetings (sample for welcome translation)
+  const welcomeTexts = {
+    en: "Namaste! Welcome to Northeast India – Safe Journeys, Beautiful Memories",
+    hi: "नमस्ते! पूर्वोत्तर भारत में आपका स्वागत है – सुरक्षित यात्रा, सुंदर यादें",
+    as: "নমস্কাৰ! উত্তৰ-পূব ভাৰতলৈ আপোনালোকে স্বাগতম – নিস্তব্ধ ভ্ৰমণ, পৰম আনন্দ",
+    de: "Namaste! Willkommen im Nordostindien – Sichere Reisen, schöne Erinnerungen",
+    fr: "Namaste! Bienvenue dans le nord-est de l'Inde – Voyages sûrs, beaux souvenirs",
+    es: "Namaste! Bienvenido al noreste de India – Viajes seguros, hermosos recuerdos",
+    zh: "纳玛斯特！欢迎来到东北印度——安全旅行，美好回忆",
+    ja: "ナマステ！北東インドへようこそ – 安全な旅、美しい思い出",
+    ru: "Намасте! Добро пожаловать на Северо-Восток Индии – Безопасные путешествия, прекрасные воспоминания",
+    ar: "نمستي! مرحبًا بكم في شمال شرق الهند – رحلات آمنة، ذكريات جميلة"
+  };
+
+  // Change welcome text with language
+  const languageSelect = document.getElementById('language-select');
+  const welcomeTextEl = document.getElementById('welcome-text');
+  languageSelect.addEventListener('change', e => {
+    const lang = e.target.value;
+    welcomeTextEl.textContent = welcomeTexts[lang] || welcomeTexts['en'];
+  });
+
+  // Generate tourist ID and QR on registration
+  const registerForm = document.getElementById('register-form');
+  const qrSection = document.getElementById('qr-section');
+  const generatedIdSpan = document.getElementById('generated-id');
+  const qrCodeImg = document.getElementById('qr-code');
+  const qr = new QRious({
+    element: qrCodeImg,
+    size: 180,
+    background: 'white'
+  });
+
+  function generateUniqueId() {
+    // Unique ID example: SALVUS-YYYYMMDD-HHMMSS-RANDOM
+    const now = new Date();
+    const timestamp = now.toISOString().replace(/[-:.TZ]/g, '').slice(0,14);
+    const random = Math.floor(Math.random() * 9000) + 1000; 
+    return `SALVUS-${timestamp}-${random}`;
+  }
+
+  registerForm.addEventListener('submit', e => {
+    e.preventDefault();
+    // Validation done by HTML input attrs
+    const uniqueID = generateUniqueId();
+    generatedIdSpan.textContent = uniqueID;
+    qr.value = uniqueID;
+    qrSection.style.display = 'block';
+    alert("Registration successful! Save your Tourist ID and QR code.");
+    window.registeredTourist = { id: uniqueID };
+    // Store ID for tracking (sample: could be sent via API)
+  });
+
+  // SOS Button Logic
+  const sosBtn = document.getElementById('sos-btn');
+  const sosPopup = document.getElementById('sos-popup');
+  const sosCancel = document.getElementById('sos-cancel');
+
+  sosBtn.addEventListener('click', () => {
+    if (!window.registeredTourist) {
+      alert('Please register first to use the SOS feature.');
+      return;
+    }
+    sosPopup.classList.add('active');
+    sosPopup.setAttribute('aria-hidden', 'false');
+
+    // Simulated Sending of SOS with ID and Geolocation
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(pos => {
+        console.log('SOS Sent:', {
+          touristId: window.registeredTourist.id,
+          location: {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+          }
+        });
+        alert('SOS activated! Emergency services notified with your location.');
+      }, err => {
+        alert('Unable to obtain location. SOS sent without location.');
+      });
+    } else {
+      alert('Geolocation not supported. SOS sent without location.');
+    }
+  });
+
+  sosCancel.addEventListener('click', () => {
+    sosPopup.classList.remove('active');
+    sosPopup.setAttribute('aria-hidden', 'true');
+  });
+
+  // Multilingual Chatbot logic (simple echo + translation mock)
+  const chatForm = document.getElementById('chat-input-form');
+  const chatInput = document.getElementById('chat-input');
+  const chatMessages = document.getElementById('chat-messages');
+
+  function appendMessage(message, sender) {
+    const msgDiv = document.createElement('div');
+    msgDiv.textContent = message;
+    msgDiv.className = 'chat-message ' + sender;
+    chatMessages.appendChild(msgDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function mockTranslate(text, lang) {
+    // Simple keyword translations (mock)
+    const translations = {
+      "help": { en: "How can I assist you?", hi: "मैं आपकी कैसे मदद कर सकता हूँ?", fr: "Comment puis-je vous aider ?" },
+      "hotel": { en: "We have luxury and budget hotels.", hi: "हमारे पास लक्ज़री और बजट होटल हैं।", fr: "Nous avons des hôtels de luxe et économiques." },
+      "sos": { en: "Press the red SOS button for emergencies.", hi: "आपात स्थिति के लिए लाल एसओएस बटन दबाएं।", fr: "Appuyez sur le bouton SOS rouge en cas d'urgence." },
+      "translate": { en: "Please specify the text and target language.", hi: "कृपया टेक्स्ट और लक्ष्य भाषा निर्दिष्ट करें।", fr: "Veuillez spécifier le texte et la langue cible." }
+    };
+    const base = "help"; // For simplicity
+
+    return translations[base][lang] || translations[base].en;
+  }
+
+  chatForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const userText = chatInput.value.trim();
+    if (!userText) return;
+    appendMessage(`You: ${userText}`, 'user');
+    chatInput.value = '';
+    // Simulate bot response
+    setTimeout(() => {
+      // For demonstration: echo with explanation
+      let response = "I'm SALVUS, your multilingual assistant. Try typing 'help', 'hotel', 'sos', or 'translate [text] to [language]'.";
+      appendMessage(`SALVUS: ${response}`, 'bot');
+    }, 800);
+  });
+</script>
+
+</body>
+</html>

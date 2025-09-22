@@ -1,0 +1,15 @@
+{
+  "welcome": "Willkommen bei Salvus",
+  "consent_title": "Standort & Einwilligung",
+  "consent_description": "Um Sicherheits- und SOS-Dienste bereitzustellen, benötigen wir Zugriff auf Ihren Standort (Vordergrund & Hintergrund).",
+  "enter_emergency_contact": "Notfallkontakt-Nummer eingeben",
+  "save_and_continue": "Speichern und Fortfahren",
+  "home_title": "Startseite",
+  "safety_score": "Sicherheitsbewertung",
+  "panic": "Panik",
+  "send_sos": "SOS senden",
+  "sos_sent": "SOS gesendet",
+  "trip_planner": "Reiseplaner",
+  "history": "SOS Verlauf",
+  "settings": "Einstellungen"
+}

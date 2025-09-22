@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>SALVUS — Safety & Chat</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>.chatbox{height:340px;overflow:auto;padding:12px;background:#fff;border-radius:8px;margin-bottom:10px}</style>
+</head>
+<body>
+  <header class="gov-header-mini"><div class="brand-mini">Safety & Assistance</div></header>
+  <nav class="main-nav">
+    <a href="index.html">Home</a>
+    <a href="destinations.html">Destinations</a>
+    <a href="hotels.html">Hotels</a>
+    <a href="id.html">Tourist ID</a>
+    <a href="safety.html" class="active">Safety</a>
+    <a href="iot.html">IoT Devices</a>
+    <a href="about.html">About</a>
+  </nav>
+
+  <main class="container">
+    <section class="card">
+      <h2>Emergency SOS</h2>
+      <p class="muted">Press the SOS for immediate help. This demo simulates dispatch to nearest unit and shares demo live location.</p>
+      <div class="row">
+        <button class="btn danger" onclick="sosFlow()">🚨 SOS — Send Alert</button>
+        <button class="btn" onclick="simulateGeoFence()">Simulate Geo-Fence Alert</button>
+      </div>
+      <div id="sosResult" class="muted" style="margin-top:12px"></div>
+    </section>
+
+    <section class="card">
+      <h2>Assistant Chatbot (Multilingual)</h2>
+      <div id="chatbox" class="chatbox" aria-live="polite"></div>
+      <div class="row">
+        <input id="chatInput" placeholder="Ask for help, directions, or translation (e.g., 'Where is the nearest hospital?')" style="flex:1;padding:8px;">
+        <button class="btn primary" onclick="sendChat()">Send</button>
+      </div>
+      <p class="muted">Tip: Use the language selector on the home page to set bot language. Chat supports basic translations & canned responses in the selected language (demo).</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">© SALVUS 2025 — Safety</footer>
+
+<script src="script.js"></script>
+<script>
+  function sosFlow(){
+    const rec = JSON.parse(localStorage.getItem('salvus_user') || 'null');
+    const lang = localStorage.getItem('salvus_lang') || 'en';
+    if (!rec) {
+      document.getElementById('sosResult').innerText = (lang==='hi' ? 'कृपया पहले पंजीकरण करें।' : 'Please register first.');
+      return;
+    }
+    // simulate: send alert with last location if exists
+    const last = rec.lastLocation ? `Last known: ${rec.lastLocation.lat.toFixed(3)}, ${rec.lastLocation.lng.toFixed(3)}` : 'Location: not shared';
+    document.getElementById('sosResult').innerHTML = `🚨 SOS sent for ${rec.name} (${rec.touristId}) — ${last}<br><em>Nearest unit dispatching (demo)</em>`;
+    setTimeout(()=> alert('Dispatch confirmed (demo). Nearest unit en route.'), 800);
+  }
+
+  // Simple chat simulation, multilingual canned responses
+  const canned = {
+    en: {
+      hi: "Hello! How can I help you? (Try: 'nearest hospital', 'translate: thank you to hindi')",
+      'nearest hospital': "Nearest hospital: Capital Hospital (demo). Call emergency: +91-xxxx.",
+      'where is the police station': "Nearest police station: City Police Station (demo).",
+      'translate: thank you to hindi': "धन्यवाद"
+    },
+    hi: {
+      hi: "नमस्ते! मैं आपकी कैसे मदद करूँ? (उदाहरण: 'नज़दीकी अस्पताल', 'translate: thank you to hindi')",
+      'nearest hospital': "नज़दीकी अस्पताल: Capital Hospital (डेमो). आपातकालीन: +91-xxxx.",
+      'translate: thank you to english': "Thank you"
+    },
+    de: { hi: "Hallo! Wie kann ich helfen?", 'nearest hospital': "Nächstes Krankenhaus: Demo Hospital." }
+  };
+
+  function appendChat(who, text){
+    const box = document.getElementById('chatbox');
+    const p = document.createElement('div');
+    p.className = who === 'user' ? 'chat-user' : 'chat-bot';
+    p.style.marginBottom = '8px';
+    p.innerHTML = `<strong>${who==='user'?'You':'SALVUS'}</strong>: ${text}`;
+    box.appendChild(p);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function sendChat(){
+    const text = document.getElementById('chatInput').value.trim();
+    if (!text) return;
+    appendChat('user', text);
+    document.getElementById('chatInput').value = '';
+    const lang = localStorage.getItem('salvus_lang') || 'en';
+    const l = canned[lang] ? lang : 'en';
+    const key = text.toLowerCase();
+    // very simple matching
+    let resp = canned[l][key] || canned[l]['hi'] || "Sorry, I didn't understand (demo).";
+    // check 'translate:' pattern
+    if (key.startsWith('translate:')) {
+      // format: translate: <text> to <lang>
+      const m = key.match(/translate:\s*(.+)\s+to\s+(\w+)/i);
+      if (m) {
+        const source = m[1];
+        const target = m[2];
+        resp = `Demo translate: "${source}" → [${target}] (demo).`;
+      } else resp = "Translate format: translate: <text> to <lang>";
+    }
+    setTimeout(()=> appendChat('bot', resp), 600 + Math.random()*500);
+  }
+
+  function simulateGeoFence(){
+    alert('Geo-fence simulated: tourist entering restricted zone (demo). Notifying user & advisory shown.');
+  }
+</script>
+</body>
+</html>
+

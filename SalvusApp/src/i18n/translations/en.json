@@ -1,0 +1,15 @@
+{
+  "welcome": "Welcome to Salvus",
+  "consent_title": "Location & Consent",
+  "consent_description": "To provide safety and SOS services we need access to your location (foreground & background).",
+  "enter_emergency_contact": "Enter emergency contact number",
+  "save_and_continue": "Save and Continue",
+  "home_title": "Home",
+  "safety_score": "Safety Score",
+  "panic": "Panic",
+  "send_sos": "Send SOS",
+  "sos_sent": "SOS sent",
+  "trip_planner": "Trip Planner",
+  "history": "SOS History",
+  "settings": "Settings"
+}

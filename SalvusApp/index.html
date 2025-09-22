@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SALVUS - Government of Northeast India Tourism Department</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+</head>
+<body>
+    <!-- Floating SOS Button -->
+    <button id="sosButton" class="sos-button" aria-label="Emergency SOS">
+        <span class="sos-icon">🚨</span>
+        <span class="sos-text">SOS</span>
+    </button>
+
+    <!-- Navigation Header -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="logo">
+                    <div class="logo-icon">🇮🇳</div>
+                    <div class="logo-text">
+                        <span class="logo-main">SALVUS</span>
+                        <span class="logo-tagline">Safe Journeys, Beautiful Memories</span>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="#" class="nav-link" data-page="welcome">Home</a>
+                <a href="#" class="nav-link" data-page="register">Register</a>
+                <a href="#" class="nav-link" data-page="destinations">Destinations</a>
+                <a href="#" class="nav-link" data-page="heatmaps">Tourist Map</a>
+                <a href="#" class="nav-link" data-page="hotels">Hotels</a>
+                <a href="#" class="nav-link" data-page="safety">Safety</a>
+                <a href="#" class="nav-link" data-page="iot">IoT Devices</a>
+                <a href="#" class="nav-link" data-page="chatbot">Assistant</a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Welcome Page -->
+    <div class="page-content" id="welcome-page">
+        <div class="hero-section">
+            <div class="hero-background"></div>
+            <div class="hero-content">
+                <div class="namaste-greeting">
+                    <h1 class="namaste-text">🙏 Namaste to India 🙏</h1>
+                    <p class="hero-subtitle">Experience the pristine beauty and rich culture of Northeast India</p>
+                </div>
+                <div class="language-selector">
+                    <h3>Choose Your Language / भाषा चुनें</h3>
+                    <div class="language-grid" id="languageGrid">
+                        <!-- Languages will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <button class="btn btn--primary btn--lg" data-page="register">Start Your Journey</button>
+                    <button class="btn btn--outline btn--lg" data-page="destinations">Explore Destinations</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="features-section">
+            <div class="container">
+                <h2>Your Gateway to Northeast India</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🗺️</div>
+                        <h3>Interactive Maps</h3>
+                        <p>Real-time tourist density and popular destinations</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🛡️</div>
+                        <h3>Safety First</h3>
+                        <p>Emergency assistance and safety monitoring</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🏨</div>
+                        <h3>Verified Hotels</h3>
+                        <p>Government-approved accommodations</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📱</div>
+                        <h3>Digital ID</h3>
+                        <p>Secure tourist identification and tracking</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Page -->
+    <div class="page-content hidden" id="register-page">
+        <div class="container">
+            <div class="registration-section">
+                <h1>Tourist Registration</h1>
+                <p class="section-subtitle">Get your Digital Tourist ID for safe travel in Northeast India</p>
+                
+                <div class="registration-container">
+                    <div class="registration-form">
+                        <form id="registrationForm">
+                            <div class="form-group">
+                                <label class="form-label">Full Name *</label>
+                                <input type="text" class="form-control" id="fullName" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Email Address *</label>
+                                <input type="email" class="form-control" id="email" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Phone Number *</label>
+                                <input type="tel" class="form-control" id="phone" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">ID Type *</label>
+                                <select class="form-control" id="idType" required>
+                                    <option value="">Select ID Type</option>
+                                    <option value="passport">Passport</option>
+                                    <option value="aadhaar">Aadhaar</option>
+                                    <option value="visa">Visa</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">ID Number *</label>
+                                <input type="text" class="form-control" id="idNumber" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Trip Duration *</label>
+                                <div class="date-range">
+                                    <input type="date" class="form-control" id="startDate" required>
+                                    <span>to</span>
+                                    <input type="date" class="form-control" id="endDate" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Emergency Contact Name *</label>
+                                <input type="text" class="form-control" id="emergencyName" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Emergency Contact Phone *</label>
+                                <input type="tel" class="form-control" id="emergencyPhone" required>
+                            </div>
+                            
+                            <button type="submit" class="btn btn--primary btn--full-width">Generate Digital Tourist ID</button>
+                        </form>
+                    </div>
+                    
+                    <div class="tourist-id-preview" id="touristIdPreview">
+                        <div class="id-card">
+                            <div class="id-header">
+                                <h3>Digital Tourist ID</h3>
+                                <div class="id-logo">🇮🇳</div>
+                            </div>
+                            <div id="qrcode"></div>
+                            <div class="id-details">
+                                <p><strong>Name:</strong> <span id="previewName">-</span></p>
+                                <p><strong>ID:</strong> <span id="previewId">-</span></p>
+                                <p><strong>Valid Until:</strong> <span id="previewValidity">-</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="blockchain-info">
+                    <h3>🔗 Blockchain Security</h3>
+                    <p>Your Digital Tourist ID is secured using blockchain technology, ensuring:</p>
+                    <div class="blockchain-features">
+                        <div class="blockchain-feature">
+                            <strong>🔒 Immutable Records:</strong> Your ID cannot be tampered with
+                        </div>
+                        <div class="blockchain-feature">
+                            <strong>⏱️ Time-bound Validity:</strong> Valid only for your trip duration
+                        </div>
+                        <div class="blockchain-feature">
+                            <strong>🚨 Emergency Access:</strong> Instant emergency contact retrieval
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Destinations Page -->
+    <div class="page-content hidden" id="destinations-page">
+        <div class="container">
+            <h1>Explore Northeast India</h1>
+            <p class="section-subtitle">Discover the eight beautiful states of Northeast India</p>
+            
+            <div class="states-grid" id="statesGrid">
+                <!-- States will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Heatmaps Page -->
+    <div class="page-content hidden" id="heatmaps-page">
+        <div class="container">
+            <h1>Tourist Activity Map</h1>
+            <p class="section-subtitle">Real-time visualization of tourist clusters and popular destinations</p>
+            
+            <div class="map-controls">
+                <div class="map-legend">
+                    <h3>Tourist Density</h3>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <div class="legend-color high"></div>
+                            <span>High (80,000+ visitors)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color medium"></div>
+                            <span>Medium (30,000-80,000 visitors)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color low"></div>
+                            <span>Low (Under 30,000 visitors)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="map-container" style="position: relative; height: 500px;">
+                <div id="heatmap" style="height: 100%; border-radius: var(--radius-lg);"></div>
+            </div>
+            
+            <div class="map-stats">
+                <div class="stat-card">
+                    <h3>Total Visitors</h3>
+                    <p class="stat-number">490,000+</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Locations</h3>
+                    <p class="stat-number">8</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Peak Season</h3>
+                    <p class="stat-number">Oct-Mar</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hotels Page -->
+    <div class="page-content hidden" id="hotels-page">
+        <div class="container">
+            <h1>Government Verified Hotels</h1>
+            <p class="section-subtitle">Trusted accommodations across Northeast India</p>
+            
+            <div class="hotel-categories">
+                <button class="category-filter active" data-category="all">All Hotels</button>
+                <button class="category-filter" data-category="luxury">Luxury</button>
+                <button class="category-filter" data-category="heritage">Heritage</button>
+                <button class="category-filter" data-category="eco-resort">Eco-Resort</button>
+                <button class="category-filter" data-category="budget">Budget</button>
+            </div>
+            
+            <div class="hotels-grid" id="hotelsGrid">
+                <!-- Hotels will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Safety Page -->
+    <div class="page-content hidden" id="safety-page">
+        <div class="container">
+            <h1>Tourist Safety Center</h1>
+            <p class="section-subtitle">Your safety is our priority - comprehensive safety information and emergency services</p>
+            
+            <div class="safety-dashboard">
+                <div class="safety-score-section">
+                    <h2>Tourist Safety Scores</h2>
+                    <div class="safety-scores" id="safetyScores">
+                        <!-- Safety scores will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="emergency-section">
+                    <h2>🚨 Emergency Contacts</h2>
+                    <div class="emergency-grid">
+                        <div class="emergency-card">
+                            <div class="emergency-icon">🚓</div>
+                            <h3>Police</h3>
+                            <p class="emergency-number">100</p>
+                        </div>
+                        <div class="emergency-card">
+                            <div class="emergency-icon">🏥</div>
+                            <h3>Medical Emergency</h3>
+                            <p class="emergency-number">108</p>
+                        </div>
+                        <div class="emergency-card">
+                            <div class="emergency-icon">🚒</div>
+                            <h3>Fire Emergency</h3>
+                            <p class="emergency-number">101</p>
+                        </div>
+                        <div class="emergency-card">
+                            <div class="emergency-icon">👮</div>
+                            <h3>Tourist Police</h3>
+                            <p class="emergency-number">1363</p>
+                        </div>
+                        <div class="emergency-card">
+                            <div class="emergency-icon">📞</div>
+                            <h3>Tourism Helpline</h3>
+                            <p class="emergency-number">1800-11-1363</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="safety-guidelines">
+                    <h2>Safety Guidelines</h2>
+                    <div class="guidelines-grid">
+                        <div class="guideline-card">
+                            <h3>🌄 Mountain Safety</h3>
+                            <ul>
+                                <li>Always inform your location to authorities</li>
+                                <li>Carry sufficient warm clothing</li>
+                                <li>Travel in groups during treks</li>
+                                <li>Check weather conditions before travel</li>
+                            </ul>
+                        </div>
+                        <div class="guideline-card">
+                            <h3>🚗 Travel Safety</h3>
+                            <ul>
+                                <li>Use government-approved tour operators</li>
+                                <li>Keep emergency contacts handy</li>
+                                <li>Inform family about your itinerary</li>
+                                <li>Carry valid identification documents</li>
+                            </ul>
+                        </div>
+                        <div class="guideline-card">
+                            <h3>🏥 Health Safety</h3>
+                            <ul>
+                                <li>Carry basic first aid kit</li>
+                                <li>Stay hydrated and eat safely</li>
+                                <li>Get necessary vaccinations</li>
+                                <li>Have travel insurance</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- IoT Devices Page -->
+    <div class="page-content hidden" id="iot-page">
+        <div class="container">
+            <h1>Smart Safety IoT Devices</h1>
+            <p class="section-subtitle">Advanced safety technology for modern travelers</p>
+            
+            <div class="iot-overview">
+                <div class="overview-card">
+                    <h2>🔗 Connected Safety Ecosystem</h2>
+                    <p>Our IoT devices create a comprehensive safety network that monitors your location, health, and security throughout your journey in Northeast India.</p>
+                </div>
+            </div>
+            
+            <div class="devices-grid" id="iotDevicesGrid">
+                <!-- IoT devices will be populated by JavaScript -->
+            </div>
+            
+            <div class="iot-benefits">
+                <h2>Why Choose SALVUS IoT Safety?</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">📡</div>
+                        <h3>Real-time Monitoring</h3>
+                        <p>Continuous location and health tracking with instant alerts to emergency services</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🛡️</div>
+                        <h3>Proactive Safety</h3>
+                        <p>AI-powered risk assessment and preventive safety measures</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">👨‍👩‍👧‍👦</div>
+                        <h3>Family Peace of Mind</h3>
+                        <p>Keep your loved ones informed about your safety and location</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">⚡</div>
+                        <h3>Instant Emergency Response</h3>
+                        <p>One-touch SOS with GPS location sharing to nearest authorities</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot Page -->
+    <div class="page-content hidden" id="chatbot-page">
+        <div class="container">
+            <h1>SALVUS Travel Assistant</h1>
+            <p class="section-subtitle">Multilingual AI assistant for all your travel queries</p>
+            
+            <div class="chatbot-container">
+                <div class="chatbot-sidebar">
+                    <h3>Language Support</h3>
+                    <div class="language-options" id="chatLanguages">
+                        <!-- Language options will be populated by JavaScript -->
+                    </div>
+                    
+                    <div class="quick-actions">
+                        <h3>Quick Help</h3>
+                        <button class="quick-btn" data-query="tell me about Kaziranga National Park">Kaziranga Info</button>
+                        <button class="quick-btn" data-query="what are the best hotels in Shillong">Hotels in Shillong</button>
+                        <button class="quick-btn" data-query="safety tips for Arunachal Pradesh">Safety Tips</button>
+                        <button class="quick-btn" data-query="how to reach Gangtok">Travel to Gangtok</button>
+                    </div>
+                </div>
+                
+                <div class="chatbot-main">
+                    <div class="chat-header">
+                        <div class="chat-avatar">🤖</div>
+                        <div class="chat-info">
+                            <h3>SALVUS Assistant</h3>
+                            <p class="chat-status">Online • Multilingual Support</p>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message bot-message">
+                            <div class="message-avatar">🤖</div>
+                            <div class="message-content">
+                                <p>Hello! I'm your SALVUS travel assistant. I can help you with information about destinations, hotels, safety tips, and travel planning in Northeast India. How can I assist you today?</p>
+                                <span class="message-time">Now</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-container">
+                        <div class="chat-input-wrapper">
+                            <input type="text" class="chat-input" id="chatInput" placeholder="Type your message..." maxlength="500">
+                            <button class="send-button" id="sendButton">
+                                <span>➤</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SOS Modal -->
+    <div class="modal hidden" id="sosModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🚨 Emergency SOS Activated</h2>
+            </div>
+            <div class="modal-body">
+                <div class="emergency-status">
+                    <p><strong>Status:</strong> <span class="status status--error">Emergency Alert Sent</span></p>
+                    <p><strong>Location:</strong> <span id="emergencyLocation">Detecting...</span></p>
+                    <p><strong>Time:</strong> <span id="emergencyTime"></span></p>
+                </div>
+                <div class="emergency-actions">
+                    <p>Emergency services have been notified. Help is on the way.</p>
+                    <div class="emergency-contact-info">
+                        <p><strong>Tourist Police:</strong> 1363</p>
+                        <p><strong>Medical Emergency:</strong> 108</p>
+                        <p><strong>General Emergency:</strong> 100</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn--secondary" id="cancelSOS">Cancel Alert</button>
+                <button class="btn btn--primary" id="callEmergency">Call Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

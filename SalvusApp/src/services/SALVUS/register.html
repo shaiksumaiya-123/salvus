@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>SALVUS — Register</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- QR library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+  <header class="gov-header">
+    <div class="logo-wrap-mini">
+      <svg width="160" height="48" viewBox="0 0 200 60" aria-hidden="true">
+        <rect rx="8" width="200" height="60" fill="#0b4f2b"/>
+        <text x="110" y="36" font-family="Nunito, sans-serif" font-weight="800" font-size="20" fill="#fff">SALVUS</text>
+      </svg>
+    </div>
+  </header>
+
+  <nav class="main-nav">
+    <a href="index.html">Home</a>
+    <a href="destinations.html">Destinations</a>
+    <a href="hotels.html">Hotels</a>
+    <a href="id.html" class="active">Tourist ID</a>
+    <a href="safety.html">Safety</a>
+    <a href="iot.html">IoT Devices</a>
+    <a href="about.html">About</a>
+  </nav>
+
+  <main class="container">
+    <section class="card thin">
+      <h2>Create Your Digital Tourist ID</h2>
+      <p class="muted">The ID below is a demo. In production this would be issued via a secure blockchain record and valid only during your stay.</p>
+
+      <form id="regForm">
+        <label>Full name</label>
+        <input id="name" required placeholder="e.g., John Doe">
+        <label>Passport or Aadhaar number</label>
+        <input id="idno" required placeholder="Passport / Aadhaar">
+        <label>Nationality</label>
+        <input id="nationality" placeholder="e.g., German">
+        <label>Arrival date</label>
+        <input id="start" type="date" required>
+        <label>Departure date</label>
+        <input id="end" type="date" required>
+        <label>Emergency contact</label>
+        <input id="emergency" placeholder="+91-XXXXXXXXXX" required>
+        <div class="row">
+          <button class="btn primary" type="submit">Generate ID & QR</button>
+          <button class="btn" type="button" onclick="window.location.href='index.html'">Cancel</button>
+        </div>
+      </form>
+
+      <div id="idCard" class="id-card hidden">
+        <h3>Your SALVUS Tourist ID</h3>
+        <p><strong>ID:</strong> <span id="generatedId"></span></p>
+        <p><strong>Name:</strong> <span id="genName"></span></p>
+        <p><strong>Valid:</strong> <span id="genValidity"></span></p>
+        <div id="qrcode"></div>
+        <div class="row">
+          <button class="btn" onclick="downloadQR()">Download QR</button>
+          <button class="btn primary" onclick="window.location.href='profile.html'">Go to Profile / Tracking</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <small>SALVUS — Demo Tourist ID | Data protection & encryption recommended for production</small>
+  </footer>
+
+<script src="script.js"></script>
+<script>
+  // Registration form -> create ID, QR, save in localStorage
+  document.getElementById('regForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const idno = document.getElementById('idno').value.trim();
+    const nat = document.getElementById('nationality').value.trim();
+    const start = document.getElementById('start').value;
+    const end = document.getElementById('end').value;
+    const emergency = document.getElementById('emergency').value.trim();
+    // create a demo ID (simulate blockchain hash prefix SALVUS-BLK-XXXX)
+    const rand = Math.floor(Math.random()*900000)+100000;
+    const touristId = 'SALVUS-BLK-' + rand.toString(16).toUpperCase();
+    const record = { touristId, name, idno, nat, start, end, emergency, createdAt: Date.now() };
+    localStorage.setItem('salvus_user', JSON.stringify(record));
+    // show
+    document.getElementById('generatedId').innerText = touristId;
+    document.getElementById('genName').innerText = name + ' (' + nat + ')';
+    document.getElementById('genValidity').innerText = start + ' → ' + end;
+    document.getElementById('idCard').classList.remove('hidden');
+    // QR generation
+    document.getElementById('qrcode').innerHTML = '';
+    new QRCode(document.getElementById('qrcode'), {
+      text: JSON.stringify({ touristId, name, idno }),
+      width: 160,
+      height: 160
+    });
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  });
+
+  function downloadQR(){
+    // simple download from canvas or img in QR container
+    const qrImg = document.querySelector('#qrcode img') || document.querySelector('#qrcode canvas');
+    if (!qrImg) { alert('QR not ready.'); return; }
+    const url = qrImg.tagName === 'IMG' ? qrImg.src : qrImg.toDataURL("image/png");
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'SALVUS_TouristID_QR.png';
+    a.click();
+  }
+</script>
+</body>
+</html>

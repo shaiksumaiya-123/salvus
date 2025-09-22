@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>SALVUS — Profile & Tracking</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>#mapProfile{height:420px;border-radius:8px;}</style>
+</head>
+<body>
+  <header class="gov-header-mini"><div class="brand-mini">SALVUS — Profile</div></header>
+  <nav class="main-nav">
+    <a href="index.html">Home</a>
+    <a href="destinations.html">Destinations</a>
+    <a href="hotels.html">Hotels</a>
+    <a href="id.html">Tourist ID</a>
+    <a href="safety.html">Safety</a>
+    <a href="iot.html">IoT Devices</a>
+    <a href="about.html">About</a>
+  </nav>
+
+  <main class="container">
+    <section class="card">
+      <h2>Your SALVUS Profile</h2>
+      <div id="profileBlock"></div>
+      <h3>Live Tracking (demo)</h3>
+      <p class="muted">This simulates periodic location updates from your device/watch. Sharing is opt-in.</p>
+      <div id="mapProfile">Loading map…</div>
+      <div class="row">
+        <button class="btn primary" onclick="startSim()">Start Simulated Tracking</button>
+        <button class="btn" onclick="stopSim()">Stop</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">© SALVUS 2025</footer>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="script.js"></script>
+<script>
+  // show profile data
+  const profileBlock = document.getElementById('profileBlock');
+  const record = JSON.parse(localStorage.getItem('salvus_user') || 'null');
+  if (!record) {
+    profileBlock.innerHTML = '<p class="muted">No tourist record found. Please <a href="register.html">register</a>.</p>';
+  } else {
+    profileBlock.innerHTML = `<p><strong>${record.name}</strong> — <em>${record.touristId || record.touristId}</em></p>
+      <p>Valid: ${record.start} → ${record.end}</p>
+      <p>Emergency: ${record.emergency}</p>`;
+  }
+
+  // Leaflet map + marker simulation
+  const map = L.map('mapProfile').setView([26.5, 92.8], 7); // center around Assam as example
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18, attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  let marker = L.marker([26.5, 92.8]).addTo(map).bindPopup('Your simulated location');
+  let simInterval = null;
+  const path = [
+    [26.5,92.8],[26.6,92.9],[26.7,93.0],[26.8,93.1],[26.85,93.2],[26.9,93.3]
+  ];
+  let idx = 0;
+  function startSim(){
+    if (simInterval) return;
+    idx = 0;
+    simInterval = setInterval(()=> {
+      if (idx >= path.length) idx = 0;
+      const latlng = path[idx++];
+      marker.setLatLng(latlng).update();
+      marker.bindPopup('Live location: ' + latlng.join(', ')).openPopup();
+      map.panTo(latlng);
+      // store last known location to local storage as demo
+      const rec = JSON.parse(localStorage.getItem('salvus_user') || 'null');
+      if (rec) { rec.lastLocation = { lat: latlng[0], lng: latlng[1], ts: Date.now() }; localStorage.setItem('salvus_user', JSON.stringify(rec)); }
+    }, 2400);
+  }
+  function stopSim(){ clearInterval(simInterval); simInterval = null; }
+</script>
+</body>
+</html>
